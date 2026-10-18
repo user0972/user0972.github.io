@@ -904,6 +904,16 @@
   const signupEndpoint = `${BASE}/revival-signup`;
   const loginEndpoint = `${BASE}/revival-login`;
 
+  async function getPlatformName() {
+    try {
+      const response = await fetch('/platformname.txt', { cache: 'no-store' });
+      if (!response.ok) throw new Error('platformname.txt could not be loaded');
+      return (await response.text()).trim() || 'REVIVAL';
+    } catch {
+      return 'REVIVAL';
+    }
+  }
+
   // Keep validation messages as plain text below their fields; no warning box.
   const messageStyle = "display:block;margin:4px 0 0;padding:0;border:0;background:transparent;box-shadow:none;border-radius:0;font-size:12px;line-height:1.4;";
   function fieldMessage(id, text) {
@@ -988,7 +998,8 @@
       } else {
         sessionStorage.setItem("revival_session", JSON.stringify(result.session));
         sessionStorage.setItem("revival_player", JSON.stringify(player));
-        generalMessage(`Account created successfully! Welcome to REVIVAL, ${player.username || username}. Your REVIVAL user ID is ${uid ?? "being retrieved"}. You are now signed in.`, true);
+        const platformName = await getPlatformName();
+        generalMessage(`Account created successfully! Welcome to ${platformName}, ${player.username || username}. Your REVIVAL user ID is ${uid ?? "being retrieved"}. You are now signed in.`, true);
       }
       if ($("LoginUsername")) $("LoginUsername").value = username;
       if (passwordInput) passwordInput.value = "";
