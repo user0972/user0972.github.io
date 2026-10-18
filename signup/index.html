@@ -875,11 +875,11 @@
 <script>
 (async function () {
   try {
-    const response = await fetch('platformname.txt', { cache: 'no-store' });
+    const response = await fetch('/platformname.txt', { cache: 'no-store' });
     if (!response.ok) throw new Error('platformname.txt could not be loaded');
     const platformName = (await response.text()).trim();
     if (!platformName) return;
-    const replaceBrand = value => typeof value === 'string' ? value.replace(/REVIVAL|REVIVAL|brickadia/g, platformName) : value;
+    const replaceBrand = value => typeof value === 'string' ? value.replace(/REVIVAL|brickadia/gi, platformName) : value;
     document.title = replaceBrand(document.title);
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     let node;
