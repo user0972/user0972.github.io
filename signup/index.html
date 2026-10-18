@@ -748,7 +748,7 @@
     </div>
     <div class="attribution hidden-xs">
      <span class="notranslate">
-      Game: ROBLOX Point
+      Game: REVIVAL Point
      </span>
      <br/>
      Developer:
@@ -1034,6 +1034,9 @@
       sessionStorage.setItem("revival_session", JSON.stringify(result.session));
       sessionStorage.setItem("revival_player", JSON.stringify(result.player));
       showLogin(`Welcome back, ${result.player?.username || username}!`, true);
+      // The session is now stored; send the signed-in player to the homepage.
+      window.location.replace("/");
+      return;
     } catch (error) { showLogin(error.message || "Login failed. Please try again."); }
     finally { busy(button, false, original); }
   }, true);
