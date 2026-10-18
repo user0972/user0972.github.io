@@ -136,9 +136,12 @@
        <div class="form-group">
         <input class="form-control" id="LoginButton" name="submitLogin" rbx-form-interaction="" type="submit" value="Log In"/>
        </div>
-       <a class="navbar-link" href="https://web.archive.org/web/20160331235219/https://www.roblox.com/Login/ResetPasswordRequest.aspx" id="HeaderForgotPassword">
-        Forgot Username/Password?
-       </a>
+       <div id="LoginMessageRow" style="display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;clear:both;">
+        <p id="revival-login-message" role="status" aria-live="polite" style="display:none;margin:0;padding:0;border:0;background:transparent;box-shadow:none;border-radius:0;font-size:12px;line-height:1.4;max-width:260px;overflow-wrap:anywhere;"></p>
+        <a class="navbar-link" href="https://web.archive.org/web/20160331235219/https://www.roblox.com/Login/ResetPasswordRequest.aspx" id="HeaderForgotPassword" style="white-space:nowrap;">
+         Forgot Username/Password?
+        </a>
+       </div>
        <input id="ReturnUrl" name="ReturnUrl" type="hidden" value=""/>
       </form>
      </div>
@@ -1008,21 +1011,20 @@
     const form = event.target;
     if (form?.id !== "LogInForm") return;
     event.preventDefault(); event.stopPropagation(); event.stopImmediatePropagation();
-    let message = $("revival-login-message");
-    if (!message) {
-      message = document.createElement("p"); message.id = "revival-login-message";
-      message.style.cssText = messageStyle; form.appendChild(message);
-    }
+    const message = $("revival-login-message");
     const username = $("LoginUsername")?.value.trim() || "", password = $("LoginPassword")?.value || "";
-    const showLogin = text => { message.textContent = text; message.style.cssText = messageStyle + `color:${text ? "#b00020" : "inherit"};`; };
+    const showLogin = (text, success = false) => {
+      message.textContent = text;
+      message.style.display = text ? "block" : "none";
+      message.style.color = text ? (success ? "#267a35" : "#b00020") : "inherit";
+    };
     if (!username || !password) { showLogin("Enter your username and password."); return; }
     const button = $("LoginButton"), original = button?.value || "Log In"; busy(button, true, original);
     try {
       const result = await postJSON(loginEndpoint, { username, password });
       sessionStorage.setItem("revival_session", JSON.stringify(result.session));
       sessionStorage.setItem("revival_player", JSON.stringify(result.player));
-      message.textContent = `Welcome back, ${result.player?.username || username}!`;
-      message.style.cssText = messageStyle + "color:#267a35;";
+      showLogin(`Welcome back, ${result.player?.username || username}!`, true);
     } catch (error) { showLogin(error.message || "Login failed. Please try again."); }
     finally { busy(button, false, original); }
   }, true);
