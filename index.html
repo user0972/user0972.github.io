@@ -3,25 +3,387 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>REVIVAL</title>
+  <meta name="theme-color" content="#343a40">
+  <title>Home</title>
+  <link rel="icon" href="/pjnicon.png">
+  <style>
+    :root {
+      --nav: #343a40;
+      --nav-hover: #252a2e;
+      --accent: #c83232;
+      --accent-hover: #ad2727;
+      --link: #0066aa;
+      --ink: #393b3d;
+      --muted: #777d82;
+      --line: #d6d9dc;
+      --page: #f1f2f3;
+      --panel: #fff;
+    }
+    * { box-sizing: border-box; }
+    html { visibility: hidden; scroll-behavior: smooth; }
+    html.session-valid { visibility: visible; }
+    body { margin: 0; background: var(--page); color: var(--ink); font: 14px Arial, Helvetica, sans-serif; }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button, input { font: inherit; }
+    .topbar { min-height: 52px; background: var(--nav); color: #f7f7f7; border-bottom: 3px solid var(--accent); }
+    .topbar-inner { max-width: 1220px; min-height: 49px; margin: 0 auto; padding: 0 16px; display: flex; align-items: center; gap: 20px; }
+    .brand { display: inline-flex; align-items: center; gap: 8px; flex: 0 0 auto; color: #fff; font-size: 18px; font-weight: bold; letter-spacing: .3px; white-space: nowrap; }
+    .brand:hover { text-decoration: none; }
+    .brand img { width: 31px; height: 31px; object-fit: contain; }
+    .main-nav { display: flex; align-items: stretch; align-self: stretch; gap: 2px; }
+    .main-nav a, .main-nav button { display: inline-flex; align-items: center; padding: 0 12px; color: #f5f5f5; background: transparent; border: 0; cursor: pointer; font-size: 14px; }
+    .main-nav a:hover, .main-nav button:hover { background: var(--nav-hover); text-decoration: none; }
+    .search-form { display: flex; flex: 1 1 250px; max-width: 390px; margin-left: auto; }
+    .search-form input { width: 100%; min-width: 80px; height: 31px; padding: 6px 9px; border: 1px solid #202428; border-right: 0; border-radius: 2px 0 0 2px; outline: none; }
+    .search-form input:focus { border-color: #7b9bb5; box-shadow: 0 0 0 1px #7b9bb5; }
+    .search-form button { height: 31px; padding: 0 12px; color: #fff; background: #5c646b; border: 1px solid #202428; border-radius: 0 2px 2px 0; cursor: pointer; }
+    .account-menu { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; color: #fff; max-width: 190px; }
+    .account-avatar { display: grid; place-items: center; width: 28px; height: 28px; flex: 0 0 28px; background: #8da3b6; border: 1px solid rgba(255,255,255,.35); color: #fff; font-weight: bold; }
+    .account-name { color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 125px; }
+    .page-wrap { max-width: 1220px; padding: 21px 16px 36px; margin: 0 auto; }
+    .breadcrumb { margin: 0 0 16px; color: #7b8085; font-size: 12px; }
+    .layout { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 20px; align-items: start; }
+    .sidebar { background: var(--panel); border: 1px solid var(--line); }
+    .sidebar-heading { padding: 12px 13px 9px; color: #858a8e; font-size: 11px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #e5e6e7; }
+    .side-link { min-height: 38px; display: flex; align-items: center; gap: 10px; padding: 8px 13px; color: #404448; border-left: 3px solid transparent; }
+    .side-link:hover { color: #222; background: #f5f6f7; text-decoration: none; }
+    .side-link.active { background: #f5f5f5; border-left-color: var(--accent); font-weight: bold; }
+    .side-icon { display: inline-grid; place-items: center; width: 17px; color: #757c82; font-size: 15px; line-height: 1; }
+    .side-link.disabled { color: #999; cursor: not-allowed; }
+    .side-link.disabled:hover { background: transparent; }
+    .main-column { min-width: 0; }
+    .page-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin: 0 0 15px; }
+    h1 { margin: 0; font-size: 25px; font-weight: normal; color: #34383b; }
+    .welcome-subtitle { margin: 5px 0 0; color: var(--muted); line-height: 1.45; }
+    .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 8px; margin-top: 3px; color: #3c7543; background: #e8f3e7; border: 1px solid #d1e5cf; font-size: 12px; white-space: nowrap; }
+    .online-dot { width: 7px; height: 7px; border-radius: 50%; background: #48a451; }
+    .panel { background: var(--panel); border: 1px solid var(--line); margin-bottom: 18px; }
+    .panel-header { min-height: 43px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #dedfe1; }
+    .panel-header h2 { margin: 0; font-size: 17px; font-weight: normal; }
+    .panel-body { padding: 14px; }
+    .welcome-panel { display: grid; grid-template-columns: minmax(0, 1fr) 200px; overflow: hidden; }
+    .welcome-copy { padding: 19px 19px 18px; }
+    .welcome-copy h2 { margin: 0 0 8px; font-size: 20px; font-weight: normal; }
+    .welcome-copy p { margin: 0; max-width: 590px; color: #696f74; line-height: 1.55; }
+    .welcome-stat { background: #f7f8f8; border-left: 1px solid #e1e3e4; padding: 20px 17px; display: flex; flex-direction: column; justify-content: center; }
+    .stat-label { color: #80868b; font-size: 11px; text-transform: uppercase; margin-bottom: 5px; }
+    .stat-value { color: #3c4145; font-size: 23px; }
+    .stat-foot { margin-top: 4px; color: #777d82; font-size: 12px; }
+    .content-grid { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(230px, .9fr); gap: 18px; align-items: start; }
+    .game-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+    .game-card { min-width: 0; border: 1px solid #dfe1e3; background: #fff; }
+    .game-art { position: relative; height: 118px; background: #e4e6e7 center / cover no-repeat; overflow: hidden; }
+    .game-art::after { content: ""; position: absolute; inset: auto 0 0; height: 42px; background: linear-gradient(transparent, rgba(0,0,0,.47)); }
+    .preview-flag { position: absolute; top: 7px; left: 7px; z-index: 1; padding: 4px 6px; background: rgba(52,58,64,.9); color: #fff; font-size: 10px; text-transform: uppercase; }
+    .game-info { padding: 9px 9px 10px; }
+    .game-title { margin: 0 0 5px; color: #3a3e42; font-size: 13px; font-weight: bold; line-height: 1.35; }
+    .game-description { margin: 0; color: #797f84; font-size: 12px; line-height: 1.45; min-height: 34px; }
+    .game-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 9px; padding-top: 8px; border-top: 1px solid #eceeef; color: #81868a; font-size: 11px; }
+    .coming-soon { color: #8a5f14; background: #fff4d9; border: 1px solid #f1e1b9; padding: 3px 5px; white-space: nowrap; }
+    .feed-empty { display: flex; gap: 12px; align-items: flex-start; padding: 17px; color: #747a7f; line-height: 1.5; }
+    .empty-icon { display: grid; flex: 0 0 42px; width: 42px; height: 42px; place-items: center; background: #f0f2f3; border: 1px solid #e0e3e5; color: #7e868c; font-size: 19px; }
+    .feed-empty strong { display: block; margin-bottom: 4px; color: #4a4e51; font-size: 14px; font-weight: normal; }
+    .profile-card { padding: 15px; }
+    .profile-top { display: flex; align-items: center; gap: 12px; padding-bottom: 13px; border-bottom: 1px solid #e5e7e8; }
+    .large-avatar { flex: 0 0 64px; width: 64px; height: 64px; display: grid; place-items: center; background: #d5dadd; border: 1px solid #c3c9cd; color: #fff; font-size: 25px; font-weight: bold; }
+    .profile-username { margin: 0 0 4px; font-size: 16px; font-weight: bold; overflow-wrap: anywhere; }
+    .profile-state { color: #538256; font-size: 12px; }
+    .profile-details { margin: 13px 0 0; }
+    .detail-row { display: flex; justify-content: space-between; gap: 12px; margin: 0 0 10px; font-size: 12px; }
+    .detail-row dt { color: #7d8387; }
+    .detail-row dd { margin: 0; max-width: 58%; text-align: right; color: #484d50; overflow-wrap: anywhere; }
+    .secondary-button { display: block; width: 100%; margin-top: 6px; padding: 8px 10px; background: #f7f8f8; border: 1px solid #cdd1d4; color: #3d454a; text-align: center; cursor: pointer; }
+    .secondary-button:hover { background: #eceeef; }
+    .signout-button { background: #fff; border-color: #d1d4d6; }
+    .mini-panel-copy { color: #72787d; font-size: 12px; line-height: 1.55; }
+    .mini-panel-copy p { margin: 0 0 8px; }
+    .mini-panel-copy p:last-child { margin-bottom: 0; }
+    .message { display: none; margin: -6px 0 14px; padding: 9px 11px; color: #596269; background: #fff; border: 1px solid #d6dadd; font-size: 12px; line-height: 1.4; }
+    .message.visible { display: block; }
+    .footer { padding: 16px 0 6px; color: #888e92; font-size: 11px; line-height: 1.6; text-align: center; }
+    .footer a { color: #6f8ca1; }
+    @media (max-width: 920px) {
+      .topbar-inner { gap: 10px; flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
+      .main-nav a, .main-nav button { padding: 0 8px; min-height: 31px; }
+      .search-form { order: 5; flex-basis: 100%; max-width: none; }
+      .layout { grid-template-columns: 160px minmax(0, 1fr); gap: 13px; }
+      .content-grid { grid-template-columns: 1fr; }
+      .right-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    }
+    @media (max-width: 640px) {
+      .topbar-inner { gap: 8px; }
+      .brand { font-size: 16px; }
+      .brand img { width: 27px; height: 27px; }
+      .main-nav { order: 3; flex: 1 1 100%; overflow-x: auto; min-height: 34px; }
+      .main-nav a, .main-nav button { white-space: nowrap; padding: 0 10px; }
+      .account-menu { margin-left: auto; }
+      .page-wrap { padding: 15px 10px 28px; }
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .sidebar-heading { grid-column: 1 / -1; }
+      .side-link { min-height: 35px; padding: 7px 8px; gap: 6px; font-size: 12px; }
+      .side-icon { display: none; }
+      .page-title-row { align-items: flex-start; }
+      h1 { font-size: 22px; }
+      .status-pill { font-size: 11px; }
+      .welcome-panel { grid-template-columns: 1fr; }
+      .welcome-stat { border-left: 0; border-top: 1px solid #e1e3e4; padding: 12px 19px; }
+      .stat-value { font-size: 18px; }
+      .game-grid { grid-template-columns: 1fr; }
+      .game-card { display: grid; grid-template-columns: 42% minmax(0, 1fr); }
+      .game-art { height: 100%; min-height: 116px; }
+      .game-info { display: flex; flex-direction: column; justify-content: center; }
+      .game-description { min-height: 0; }
+      .right-column { display: block; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
   <script>
     (function () {
-      const session = sessionStorage.getItem('revival_session');
-      if (!session) {
+      try {
+        const rawSession = sessionStorage.getItem('revival_session');
+        const session = rawSession ? JSON.parse(rawSession) : null;
+        const expiry = Number(session && session.expires_at || 0);
+        const hasToken = !!(session && typeof session.access_token === 'string' && session.access_token.length);
+        const valid = hasToken && (!expiry || expiry > Math.floor(Date.now() / 1000));
+        if (!valid) {
+          location.replace('/signup/');
+          return;
+        }
+        document.documentElement.classList.add('session-valid');
+      } catch (error) {
         location.replace('/signup/');
-        return;
       }
-      document.documentElement.style.visibility = 'visible';
     })();
   </script>
-  <style>html{visibility:hidden}body{font:14px Arial,sans-serif;margin:0;background:#f2f2f2;color:#333}.bar{height:40px;background:#b00;color:white;display:flex;align-items:center;padding:0 18px;font-weight:bold}.content{max-width:960px;margin:35px auto;background:white;border:1px solid #ccc;padding:22px}a{color:#06c}</style>
 </head>
 <body>
-  <div class="bar">REVIVAL</div>
-  <main class="content">
-    <h2>You're signed in.</h2>
-    <p>Your account session was found. The logged-in homepage hasn't been built yet.</p>
-    <p><a href="/signup/" onclick="sessionStorage.removeItem('revival_session');sessionStorage.removeItem('revival_player');">Sign out</a></p>
-  </main>
+  <header class="topbar" id="top">
+    <div class="topbar-inner">
+      <a class="brand" href="/" aria-label="Home">
+        <img src="/pjnicon.png" alt="" onerror="this.style.display='none'">
+        <span data-platform-name>REVIVAL</span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#discover">Games</a>
+        <a href="#catalog-coming-soon" data-coming-soon>Catalog</a>
+        <a href="#create-coming-soon" data-coming-soon>Develop</a>
+        <a href="#profile-card">Profile</a>
+      </nav>
+      <form class="search-form" id="site-search" role="search">
+        <input id="search-input" type="search" placeholder="Search games, catalog, and people" aria-label="Search">
+        <button type="submit" aria-label="Search">Search</button>
+      </form>
+      <div class="account-menu" title="Signed-in account">
+        <span class="account-avatar" id="top-avatar" aria-hidden="true">P</span>
+        <span class="account-name" id="top-username">Player</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+    <div class="breadcrumb">Home <span aria-hidden="true">/</span> My Home</div>
+    <div class="layout">
+      <aside class="sidebar" aria-label="Account navigation">
+        <div class="sidebar-heading">My REVIVAL</div>
+        <a class="side-link active" href="#top"><span class="side-icon">⌂</span>Home</a>
+        <a class="side-link" href="#profile-card"><span class="side-icon">☺</span>Profile</a>
+        <a class="side-link disabled" href="#coming-soon" aria-disabled="true" title="Coming soon"><span class="side-icon">✉</span>Messages</a>
+        <a class="side-link disabled" href="#coming-soon" aria-disabled="true" title="Coming soon"><span class="side-icon">♧</span>Friends</a>
+        <a class="side-link disabled" href="#coming-soon" aria-disabled="true" title="Coming soon"><span class="side-icon">◧</span>Avatar</a>
+        <a class="side-link disabled" href="#coming-soon" aria-disabled="true" title="Coming soon"><span class="side-icon">▤</span>Inventory</a>
+        <a class="side-link disabled" href="#coming-soon" aria-disabled="true" title="Coming soon"><span class="side-icon">▦</span>Groups</a>
+        <div class="sidebar-heading">Explore</div>
+        <a class="side-link" href="#discover"><span class="side-icon">▶</span>Games</a>
+        <a class="side-link" href="#catalog-coming-soon" data-coming-soon><span class="side-icon">♢</span>Catalog</a>
+      </aside>
+
+      <main class="main-column">
+        <div class="page-title-row">
+          <div>
+            <h1>Hello, <span id="welcome-username">Player</span>!</h1>
+            <p class="welcome-subtitle">Welcome back to <span data-platform-name>REVIVAL</span>. What will you play today?</p>
+          </div>
+          <span class="status-pill"><span class="online-dot"></span>Signed in</span>
+        </div>
+
+        <div class="message" id="page-message" role="status" aria-live="polite"></div>
+
+        <section class="panel welcome-panel" aria-labelledby="welcome-heading">
+          <div class="welcome-copy">
+            <h2 id="welcome-heading">Your world starts here.</h2>
+            <p>Explore experiences, customize your character, and find your place in the community. More of <span data-platform-name>REVIVAL</span> is being built, and this is your home base while it grows.</p>
+          </div>
+          <div class="welcome-stat">
+            <span class="stat-label">Your player ID</span>
+            <span class="stat-value" id="welcome-uid">—</span>
+            <span class="stat-foot">Your account's unique ID</span>
+          </div>
+        </section>
+
+        <div class="content-grid">
+          <div class="left-column">
+            <section class="panel" id="discover" aria-labelledby="discover-title">
+              <div class="panel-header">
+                <h2 id="discover-title">Featured Games</h2>
+                <span style="color:#81878b;font-size:12px">A first look</span>
+              </div>
+              <div class="panel-body">
+                <div class="game-grid">
+                  <article class="game-card">
+                    <div class="game-art" style="background-image:url('https://web.archive.org/web/20160331235219im_/http://images.rbxcdn.com/42268b6264d89827401ef912f174f288.jpg')"><span class="preview-flag">Preview</span></div>
+                    <div class="game-info">
+                      <h3 class="game-title">Build &amp; Create</h3>
+                      <p class="game-description">A classic sandbox-style experience tile.</p>
+                      <div class="game-footer"><span>Explore</span><span class="coming-soon">Coming soon</span></div>
+                    </div>
+                  </article>
+                  <article class="game-card">
+                    <div class="game-art" style="background-image:url('https://web.archive.org/web/20160331235219im_/http://images.rbxcdn.com/04baeb33ef66ef1395cd5464309fece6.jpg')"><span class="preview-flag">Preview</span></div>
+                    <div class="game-info">
+                      <h3 class="game-title">Adventure Awaits</h3>
+                      <p class="game-description">A place for your next classic-style adventure.</p>
+                      <div class="game-footer"><span>Discover</span><span class="coming-soon">Coming soon</span></div>
+                    </div>
+                  </article>
+                  <article class="game-card">
+                    <div class="game-art" style="background-image:url('https://web.archive.org/web/20160331235219im_/http://images.rbxcdn.com/e8b89d14690203420d64b5b2fda0b461.jpg')"><span class="preview-flag">Preview</span></div>
+                    <div class="game-info">
+                      <h3 class="game-title">Play Together</h3>
+                      <p class="game-description">Multiplayer fun will have a home here.</p>
+                      <div class="game-footer"><span>Join in</span><span class="coming-soon">Coming soon</span></div>
+                    </div>
+                  </article>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel" aria-labelledby="feed-title">
+              <div class="panel-header"><h2 id="feed-title">My Feed</h2><span style="color:#81878b;font-size:12px">Updates</span></div>
+              <div class="feed-empty">
+                <div class="empty-icon" aria-hidden="true">▤</div>
+                <div><strong>Your feed is ready for its first update.</strong>Friend activity, group posts, and community updates will appear here once those features are connected.</div>
+              </div>
+            </section>
+          </div>
+
+          <aside class="right-column">
+            <section class="panel" id="profile-card" aria-labelledby="profile-heading">
+              <div class="panel-header"><h2 id="profile-heading">My Profile</h2></div>
+              <div class="profile-card">
+                <div class="profile-top">
+                  <div class="large-avatar" id="profile-avatar" aria-hidden="true">P</div>
+                  <div>
+                    <p class="profile-username" id="profile-username">Player</p>
+                    <div class="profile-state"><span class="online-dot" style="display:inline-block;margin-right:4px"></span>Online</div>
+                  </div>
+                </div>
+                <dl class="profile-details">
+                  <div class="detail-row"><dt>Player ID</dt><dd id="profile-uid">—</dd></div>
+                  <div class="detail-row"><dt>Joined</dt><dd id="profile-joined">Not available</dd></div>
+                </dl>
+                <button type="button" class="secondary-button" id="view-profile-button">View My Profile</button>
+                <button type="button" class="secondary-button signout-button" id="signout-button">Sign Out</button>
+              </div>
+            </section>
+
+            <section class="panel" id="catalog-coming-soon">
+              <div class="panel-header"><h2>Catalog</h2></div>
+              <div class="panel-body mini-panel-copy">
+                <p>Clothing and items will be added here as the catalog is built.</p>
+                <p><a href="#top" id="catalog-message-link">Back to your home</a></p>
+              </div>
+            </section>
+            <section class="panel" id="create-coming-soon">
+              <div class="panel-header"><h2>Develop</h2></div>
+              <div class="panel-body mini-panel-copy">
+                <p>Creation and publishing tools are planned for a later stage of <span data-platform-name>REVIVAL</span>.</p>
+              </div>
+            </section>
+          </aside>
+        </div>
+
+        <footer class="footer">
+          <span data-platform-name>REVIVAL</span> · A community-built classic platform<br>
+          <a href="#top">Back to top</a>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const byId = id => document.getElementById(id);
+      let player = {};
+      try {
+        player = JSON.parse(sessionStorage.getItem('revival_player') || '{}') || {};
+      } catch (_) { player = {}; }
+
+      const username = String(player.username || player.name || 'Player');
+      const uid = player.uid ?? player.user_id ?? player.userId ?? player.id ?? '—';
+      const initials = (username.trim().charAt(0) || 'P').toUpperCase();
+      ['welcome-username', 'top-username', 'profile-username'].forEach(id => {
+        if (byId(id)) byId(id).textContent = username;
+      });
+      ['top-avatar', 'profile-avatar'].forEach(id => {
+        if (byId(id)) byId(id).textContent = initials;
+      });
+      ['welcome-uid', 'profile-uid'].forEach(id => {
+        if (byId(id)) byId(id).textContent = uid;
+      });
+
+      const joinedRaw = player.created_at || player.createdAt || player.joined_at || player.joinedAt;
+      if (joinedRaw) {
+        const joinedDate = new Date(joinedRaw);
+        if (!Number.isNaN(joinedDate.getTime())) {
+          byId('profile-joined').textContent = joinedDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+      }
+
+      fetch('/platformname.txt', { cache: 'no-store' })
+        .then(response => {
+          if (!response.ok) throw new Error('Platform name file unavailable');
+          return response.text();
+        })
+        .then(text => {
+          const platformName = text.trim();
+          if (!platformName) return;
+          document.title = platformName + ' | Home';
+          document.querySelectorAll('[data-platform-name]').forEach(el => { el.textContent = platformName; });
+        })
+        .catch(() => { document.title = 'REVIVAL | Home'; });
+
+      const message = byId('page-message');
+      function showMessage(text) {
+        message.textContent = text;
+        message.classList.toggle('visible', !!text);
+      }
+
+      byId('site-search').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const query = byId('search-input').value.trim();
+        showMessage(query ? 'Search will be available when the games and catalog are connected.' : 'Enter something to search for.');
+      });
+
+      document.querySelectorAll('[data-coming-soon], .side-link.disabled').forEach(link => {
+        link.addEventListener('click', function (event) {
+          event.preventDefault();
+          showMessage(link.textContent.trim() + ' is coming later as this part of the site is built.');
+        });
+      });
+
+      byId('view-profile-button').addEventListener('click', function () {
+        showMessage('Your basic profile details are shown in the My Profile panel. A public profile page will be added next.');
+        byId('profile-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      byId('signout-button').addEventListener('click', function () {
+        sessionStorage.removeItem('revival_session');
+        sessionStorage.removeItem('revival_player');
+        location.replace('/signup/');
+      });
+    })();
+  </script>
 </body>
 </html>
