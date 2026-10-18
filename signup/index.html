@@ -130,14 +130,14 @@
        <div class="form-group" id="LoginUsernameParent">
         <input class="form-control" data-ddg-inputtype="credentials.username" id="LoginUsername" name="username" placeholder="Username" rbx-form-interaction="" type="text"/>
        </div>
-       <div class="form-group" id="LoginPasswordParent">
+       <div class="form-group" id="LoginPasswordParent" style="position:relative;">
         <input class="form-control" data-ddg-inputtype="credentials.password.current" id="LoginPassword" name="password" placeholder="Password" rbx-form-interaction="" type="password"/>
+        <p id="revival-login-message" role="status" aria-live="polite" style="display:none;position:absolute;top:100%;left:0;width:230px;max-width:calc(100vw - 24px);margin:4px 0 0;padding:0;border:0;background:transparent;box-shadow:none;border-radius:0;font-size:12px;line-height:1.4;overflow-wrap:anywhere;text-align:left;z-index:1050;"></p>
        </div>
        <div class="form-group">
         <input class="form-control" id="LoginButton" name="submitLogin" rbx-form-interaction="" type="submit" value="Log In"/>
        </div>
-       <div id="LoginMessageRow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap;clear:both;width:100%;min-width:0;">
-        <p id="revival-login-message" role="status" aria-live="polite" style="display:none;flex:1 1 auto;min-width:0;margin:0;padding:0;border:0;background:transparent;box-shadow:none;border-radius:0;font-size:12px;line-height:1.4;overflow-wrap:anywhere;text-align:left;"></p>
+       <div id="LoginMessageRow" style="display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:nowrap;clear:both;width:100%;min-width:0;">
         <a class="navbar-link" href="https://web.archive.org/web/20160331235219/https://www.roblox.com/Login/ResetPasswordRequest.aspx" id="HeaderForgotPassword" style="flex:0 0 auto;white-space:nowrap;">
          Forgot Username/Password?
         </a>
