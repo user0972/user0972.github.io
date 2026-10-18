@@ -127,8 +127,11 @@
      </div>
      <div class="collapse navbar-collapse col-sm-6 ng-scope" id="LandingNavbar" ng-modules="roblox.formEvents">
       <form action="#" class="navbar-form form-inline navbar-right ng-pristine ng-valid" context="RollerCoaster" data-demo-form="login" id="LogInForm" method="get" name="loginForm" novalidate="novalidate" rbx-form-context="" role="form">
-       <div class="form-group" id="LoginUsernameParent">
+       <div class="form-group" id="LoginUsernameParent" style="position:relative;">
         <input class="form-control" data-ddg-inputtype="credentials.username" id="LoginUsername" name="username" placeholder="Username" rbx-form-interaction="" type="text"/>
+        <a class="navbar-link" href="https://web.archive.org/web/20160331235219/https://www.roblox.com/Login/ResetPasswordRequest.aspx" id="HeaderForgotPassword" style="position:absolute;top:100%;left:0;margin-top:4px;display:block;white-space:nowrap;line-height:normal;z-index:1050;">
+         Forgot Username/Password?
+        </a>
        </div>
        <div class="form-group" id="LoginPasswordParent" style="position:relative;">
         <input class="form-control" data-ddg-inputtype="credentials.password.current" id="LoginPassword" name="password" placeholder="Password" rbx-form-interaction="" type="password"/>
@@ -137,9 +140,6 @@
        <div class="form-group">
         <input class="form-control" id="LoginButton" name="submitLogin" rbx-form-interaction="" type="submit" value="Log In"/>
        </div>
-       <a class="navbar-link" href="https://web.archive.org/web/20160331235219/https://www.roblox.com/Login/ResetPasswordRequest.aspx" id="HeaderForgotPassword" style="display:inline-block;vertical-align:middle;margin-left:8px;white-space:nowrap;line-height:34px;">
-        Forgot Username/Password?
-       </a>
        <input id="ReturnUrl" name="ReturnUrl" type="hidden" value=""/>
       </form>
      </div>
